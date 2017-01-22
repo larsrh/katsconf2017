@@ -7,7 +7,9 @@ Tutorial at Kats Conf 2, 2017 [![Build Status](https://travis-ci.org/larsrh/kats
 SBT is the "Scala Build Tool".
 We will use it to compile & run our code.
 
-You need a working installation of Java 8.
+:exclamation: You need a working installation of Java 8 (OpenJDK or Oracle JDK).
+
+:exclamation: If you're a Ubuntu user, you need to upgrade to at least Xenial (16.04 LTS).
 
 ### Windows
 
