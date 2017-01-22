@@ -1,10 +1,13 @@
 # katsconf2017
-Tutorial at Kats Conf 2, 2017
+
+Tutorial at Kats Conf 2, 2017 [![Build Status](https://travis-ci.org/larsrh/katsconf2017.svg?branch=master)](https://travis-ci.org/larsrh/katsconf2017)
 
 ## Installation instructions
 
 SBT is the "Scala Build Tool".
 We will use it to compile & run our code.
+
+You need a working installation of Java 8.
 
 ### Windows
 
