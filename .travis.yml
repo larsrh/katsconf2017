@@ -3,6 +3,8 @@ sudo: false
 jdk: oraclejdk8
 scala:
   - 2.12.1
+script:
+  - sbt ++$TRAVIS_SCALA_VERSION compile
 cache:
   directories:
     - $HOME/.ivy2/cache
