@@ -5,10 +5,22 @@ import cats.implicits._
 
 object Exercise4 {
 
+  object Matrix {
+
+    def randomIntMatrix(size: Int): Matrix[Int] =
+      Matrix(List.fill(size)(List.fill(size)(scala.util.Random.nextInt(20) - 10)))
+
+  }
+
   case class Matrix[A](entries: List[List[A]]) {
     val size = entries.length
 
     require(entries.forall(_.length == size))
+
+    override def toString: String =
+      entries.map(row =>
+        row.mkString("(", " ", ")")
+      ).mkString("\n")
 
     // Task 1: Implement matrix addition.
     // (Assume that both matrices have the same size)
