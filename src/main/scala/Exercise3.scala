@@ -14,6 +14,7 @@ object Exercise3 extends App {
 
   sealed trait Terminal[A]
   case object ReadLine extends Terminal[String]
+  case class WriteLine(inp:String) extends Terminal[Unit]
 
   type TerminalIO[A] = Free[Terminal, A]
 
@@ -24,7 +25,7 @@ object Exercise3 extends App {
     // Task 2: Define convenience functions for the operations.
 
     def readLine: TerminalIO[String] = lift(ReadLine)
-    def writeLine = ???
+    def writeLine(inp:String): TerminalIO[Unit] = lift(WriteLine(inp))
 
     def run[A, M[_] : Monad](tio: TerminalIO[A])(interpreter: FunctionK[Terminal, M]): M[A] = tio.foldMap[M](interpreter)
   }
@@ -33,6 +34,7 @@ object Exercise3 extends App {
 
   def terminalToEval: FunctionK[Terminal, Eval] = λ[FunctionK[Terminal, Eval]] {
     case ReadLine => Eval.later(StdIn.readLine())
+    case WriteLine(inp) => Eval.later(Console.out.println(inp))
   }
 
 
@@ -48,6 +50,8 @@ object Exercise3 extends App {
   val program = for {
     x <- Terminal.readLine
     y <- Terminal.readLine
+    _ <- Terminal.writeLine(s"::: $x :::")
+    _ <- Terminal.writeLine(s"::: $y :::")
   } yield x + y
 
 
