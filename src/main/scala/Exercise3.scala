@@ -14,7 +14,7 @@ object Exercise3 extends App {
 
   sealed trait Terminal[A]
   case object ReadLine extends Terminal[String]
-  case class WriteLine(inp:String) extends Terminal[Unit]
+  case class WriteLine(inp: String) extends Terminal[Unit]
 
   type TerminalIO[A] = Free[Terminal, A]
 
@@ -43,18 +43,32 @@ object Exercise3 extends App {
   case class Mock(in: List[String], out: List[String])
   type MockState[A] = State[Mock, A]
 
-  def terminalToState: FunctionK[Terminal, MockState] = ???
+  def terminalToState: FunctionK[Terminal, MockState] = λ[FunctionK[Terminal, MockState]] {
+    case ReadLine =>
+      State[Mock, String] {
+        case m @ Mock(Nil, out) => (m, "")
+        case Mock(in :: ins, out) => (Mock(ins, out), in)
+      }
+    case WriteLine(s) => State.modify(m => m.copy(out = s :: m.out))
+  }
 
   // Task 5: Be creative :-)
 
-  val program = for {
-    x <- Terminal.readLine
-    y <- Terminal.readLine
-    _ <- Terminal.writeLine(s"::: $x :::")
-    _ <- Terminal.writeLine(s"::: $y :::")
-  } yield x + y
+  val program: Free[Terminal, String] = for {
+    r1 <- Terminal.readLine
+    r2 <- Terminal.readLine
+    _ <- Terminal.writeLine(s"::: $r1 :::")
+    _ <- Terminal.writeLine(s"::: $r2 :::")
+  } yield s"$r1 $r2"
 
+  val mockState = Mock(in = List("hello ", "world"), out = List.empty)
+  val runTermToState: (Mock, String) =
+    Terminal.run(program)(terminalToState)
+    .run(mockState).value
+  println(s"processed Mock state ${runTermToState._1}")
+  val runTermToEval: Eval[String] =
+    Terminal.run(program)(terminalToEval)
 
-  println(Terminal.run(program)(terminalToEval).value)
+  println(s"program output ${runTermToEval.value}")
 
 }
